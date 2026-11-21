@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin – Smitha G S</title>
+<style>
+:root{--paper:#f6f2ea;--card:#ece6da;--ink:#17140f;--muted:#6d655a;--line:#d8d0c1;--accent:#8e2f1d}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.5 system-ui,sans-serif;padding-bottom:6rem}
+.w{width:min(900px,100% - 2rem);margin-inline:auto}
+header{background:var(--ink);color:var(--paper);padding:.9rem 0}
+header .w{display:flex;justify-content:space-between;gap:1rem;align-items:center}
+h1,h2{font-family:Georgia,serif;font-weight:400}
+h2{font-size:1.5rem;margin-bottom:.8rem}
+.card{background:#fff;border:1px solid var(--line);padding:1.2rem;margin:1.2rem 0}
+label{display:block;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:.7rem 0 .2rem}
+input[type=text],input[type=password],select{width:100%;padding:.65rem;border:1px solid var(--line);font:inherit;background:#fff;min-height:44px}
+button{font:inherit;padding:.6rem 1rem;min-height:44px;border:1px solid var(--ink);background:none;color:var(--ink);cursor:pointer}
+button:hover{background:var(--ink);color:var(--paper)}
+button.p{background:var(--accent);border-color:var(--accent);color:#fff}
+button.p:hover{background:#fff;color:var(--accent)}
+button.d{border-color:#a33;color:#a33}button.d:hover{background:#a33;color:#fff}
+.note{font-size:.88rem;color:var(--muted);margin-top:.8rem}
+.item{display:grid;grid-template-columns:96px 1fr;gap:.9rem;background:#fff;border:1px solid var(--line);padding:.8rem;margin:.7rem 0}
+.item.new{border-color:var(--accent)}
+.item img{width:96px;height:96px;object-fit:cover;background:var(--card)}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .6rem}
+.f label{margin:.3rem 0 .1rem;font-size:.7rem}.f .full{grid-column:1/-1}
+.row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem;align-items:center}
+.row button{padding:.35rem .8rem;min-height:38px}
+.row label{margin:0;text-transform:none;font-size:.9rem;display:flex;gap:.4rem;align-items:center;color:var(--ink)}
+.tag{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+#bar{position:fixed;inset:auto 0 0 0;background:var(--ink);color:var(--paper);padding:.7rem 1rem;display:flex;gap:.7rem;align-items:center;justify-content:space-between;z-index:5}
+#bar button{border-color:var(--paper);color:var(--paper)}#bar button.p{background:var(--accent);border-color:var(--accent)}
+#status{margin:.8rem 0;padding:.7rem 1rem;background:var(--card);border-left:3px solid var(--accent);white-space:pre-wrap}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="w"><b>Portfolio admin &middot; Smitha G S</b><button id="logout" hidden>Disconnect</button></div></header>
+<main class="w">
+<div id="status" hidden></div>
+
+<section id="login" class="card">
+  <h2>Connect to GitHub</h2>
+  <label for="repo">Repository (owner/name)</label><input type="text" id="repo" value="serveriseva-cell/Smitha-GS-portfolio" autocapitalize="off" autocomplete="off">
+  <label for="branch">Branch</label><input type="text" id="branch" value="main" autocapitalize="off">
+  <label for="token">Access token</label><input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+  <div class="row"><button class="p" id="connect">Connect</button></div>
+  <p class="note"><b>One-time setup.</b> On GitHub: Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens &rarr; Generate new token. Choose <b>Only select repositories</b> (this repo only), under Permissions set <b>Contents: Read and write</b>, set an expiry, and paste the token above. It is saved only in this browser, never on the website. Anyone who opens this page without the token cannot change anything.</p>
+</section>
+
+<section id="app" hidden>
+  <div class="card">
+    <h2>Add paintings</h2>
+    <input type="file" id="pick" accept="image/*" multiple>
+    <label for="where">Add new paintings at</label>
+    <select id="where"><option value="start">the start of the slideshow</option><option value="end">the end of the slideshow</option></select>
+    <p class="note">Photos are resized to 1600 px automatically. Fill in the details, then press <b>Publish changes</b>.</p>
+  </div>
+  <h2 id="ttl">Paintings</h2>
+  <div id="list"></div>
+</section>
+</main>
+
+<div id="bar" hidden><span id="count"></span><span><button id="discard">Discard</button> <button class="p" id="publish">Publish changes</button></span></div>
+
+<script>
+const $=id=>document.getElementById(id),LS="smitha-admin-v1";
+let cfg=JSON.parse(localStorage.getItem(LS)||"{}"),items=[],removed=[],help="",dirty=false;
+if(cfg.repo)$("repo").value=cfg.repo;if(cfg.branch)$("branch").value=cfg.branch;
+const say=(t,err)=>{const s=$("status");s.hidden=!t;s.textContent=t||"";s.style.borderColor=err?"#a33":"var(--accent)"};
+async function api(path,opt={}){
+  const r=await fetch("https://api.github.com/repos/"+cfg.repo+path,{...opt,headers:{Authorization:"Bearer "+cfg.token,Accept:"application/vnd.github+json","Content-Type":"application/json"}});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error((j.message||r.status)+(r.status===401||r.status===403||r.status===404?"\nCheck the token, its expiry, and that it has Contents: Read and write on this repository.":""));
+  return j;
+}
+const b64=blob=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(",")[1]);f.readAsDataURL(blob)});
+const utf8b64=t=>{let s="";new TextEncoder().encode(t).forEach(b=>s+=String.fromCharCode(b));return btoa(s)};
+async function load(){
+  say("Loading paintings...");
+  const f=await api("/contents/works.json?ref="+encodeURIComponent(cfg.branch));
+  const bytes=Uint8Array.from(atob(f.content.replace(/\n/g,"")),c=>c.charCodeAt(0));
+  const d=JSON.parse(new TextDecoder().decode(bytes));
+  help=d._help||"";items=(d.works||[]).map(w=>({title:"",year:"",medium:"",size:"",price:"",sold:false,...w}));removed=[];dirty=false;
+  $("login").hidden=true;$("app").hidden=false;$("logout").hidden=false;say("");render();
+}
+function render(){
+  const L=$("list");L.replaceChildren();
+  items.forEach((w,i)=>{
+    const d=document.createElement("div");d.className="item"+(w._blob?" new":"");d.dataset.i=i;
+    const src=w._url||("images/works/"+w.file);
+    d.innerHTML=`<img loading="lazy" alt="" src="${src}"><div><div class="tag">${w._blob?"New &middot; ":""}${i+1} &middot; ${w.file}</div>
+    <div class="f"><div class="full"><label>Title</label><input type="text" data-k="title" value=""></div>
+    <div><label>Year</label><input type="text" data-k="year" value="" inputmode="numeric"></div>
+    <div><label>Size</label><input type="text" data-k="size" value="" placeholder="18 x 8 ft"></div>
+    <div><label>Medium</label><input type="text" data-k="medium" value=""></div>
+    <div><label>Price (optional)</label><input type="text" data-k="price" value="" placeholder="&#8377;1,20,000"></div></div>
+    <div class="row"><label><input type="checkbox" data-k="sold"> Sold</label>
+    <button data-a="top">&#8607; Top</button><button data-a="up">&#8593;</button><button data-a="down">&#8595;</button><button class="d" data-a="del">Delete</button></div></div>`;
+    d.querySelectorAll("input[data-k]").forEach(el=>{const k=el.dataset.k;if(k==="sold")el.checked=!!w.sold;else el.value=w[k]||""});
+    L.append(d);
+  });
+  $("ttl").textContent=`Paintings (${items.length})`;bar();
+}
+function bar(){const n=items.filter(w=>w._blob).length;$("bar").hidden=!dirty;$("count").textContent=`${n} new, ${removed.length} removed, edited`}
+$("list").addEventListener("input",e=>{const el=e.target.closest("[data-k]");if(!el)return;const i=+el.closest(".item").dataset.i;items[i][el.dataset.k]=el.type==="checkbox"?el.checked:el.value;dirty=true;bar()});
+$("list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-a]");if(!b)return;const i=+b.closest(".item").dataset.i,a=b.dataset.a;
+  if(a==="del"){if(!confirm("Delete this painting from the website?"))return;const [w]=items.splice(i,1);if(!w._blob)removed.push(w.file)}
+  else{const j=a==="up"?i-1:a==="down"?i+1:0;if(a==="top"&&i===0||j<0||j>=items.length)return;const [w]=items.splice(i,1);items.splice(a==="top"?0:j,0,w)}
+  dirty=true;render();
+});
+function nextName(extra=[]){let m=0;[...items.map(w=>w.file),...extra.map(w=>w.file),...removed].forEach(f=>{const x=/^work-(\d+)\.jpg$/.exec(f||"");if(x)m=Math.max(m,+x[1])});return"work-"+String(m+1).padStart(2,"0")+".jpg"}
+async function prep(file){
+  const bm=await createImageBitmap(file),s=Math.min(1,1600/Math.max(bm.width,bm.height)),c=document.createElement("canvas");
+  c.width=Math.round(bm.width*s);c.height=Math.round(bm.height*s);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+  return new Promise(r=>c.toBlob(r,"image/jpeg",.84));
+}
+$("pick").addEventListener("change",async e=>{
+  const files=[...e.target.files];if(!files.length)return;say("Preparing "+files.length+" photo(s)...");
+  const add=[];
+  for(const f of files){try{const blob=await prep(f);const w={file:"",title:"Untitled",year:"",medium:"Acrylic on canvas",size:"",price:"",sold:false,_blob:blob,_url:URL.createObjectURL(blob)};
+    w.file=nextName(add);add.push(w)}catch(err){say("Could not read "+f.name,true)}}
+  if($("where").value==="start")items.unshift(...add);else items.push(...add);
+  e.target.value="";dirty=true;say("");render();window.scrollTo({top:$("list").offsetTop-10,behavior:"smooth"});
+});
+$("discard").onclick=()=>{if(confirm("Discard all unpublished changes?"))load().catch(x=>say(x.message,true))};
+$("publish").onclick=async()=>{
+  const btn=$("publish");btn.disabled=true;
+  try{
+    say("Publishing... (1/4) reading repository");
+    const ref=await api("/git/ref/heads/"+encodeURIComponent(cfg.branch)),head=ref.object.sha;
+    const cm=await api("/git/commits/"+head),tree=[];
+    const news=items.filter(w=>w._blob);let n=0;
+    for(const w of news){n++;say(`Publishing... (2/4) uploading photo ${n} of ${news.length}`);
+      const bl=await api("/git/blobs",{method:"POST",body:JSON.stringify({content:await b64(w._blob),encoding:"base64"})});
+      tree.push({path:"images/works/"+w.file,mode:"100644",type:"blob",sha:bl.sha})}
+    const out={_help:help,works:items.map(w=>({file:w.file,title:(w.title||"").trim()||"Untitled",year:(w.year||"").trim(),medium:(w.medium||"").trim(),size:(w.size||"").trim(),price:(w.price||"").trim(),sold:!!w.sold}))};
+    say("Publishing... (3/4) saving the list");
+    const jb=await api("/git/blobs",{method:"POST",body:JSON.stringify({content:utf8b64(JSON.stringify(out,null,2)+"\n"),encoding:"base64"})});
+    tree.push({path:"works.json",mode:"100644",type:"blob",sha:jb.sha});
+    removed.forEach(f=>tree.push({path:"images/works/"+f,mode:"100644",type:"blob",sha:null}));
+    const t=await api("/git/trees",{method:"POST",body:JSON.stringify({base_tree:cm.tree.sha,tree})});
+    say("Publishing... (4/4) committing");
+    const c=await api("/git/commits",{method:"POST",body:JSON.stringify({message:`Update paintings (${news.length} added, ${removed.length} removed)`,tree:t.sha,parents:[head]})});
+    await api("/git/refs/heads/"+encodeURIComponent(cfg.branch),{method:"PATCH",body:JSON.stringify({sha:c.sha})});
+    say("Published. The website updates in about a minute.");
+    await load();say("Published. The website updates in about a minute.");
+  }catch(e){say("Could not publish:\n"+e.message,true)}
+  btn.disabled=false;
+};
+$("connect").onclick=()=>{
+  cfg={repo:$("repo").value.trim(),branch:$("branch").value.trim()||"main",token:$("token").value.trim()||cfg.token};
+  if(!cfg.repo||!cfg.token){say("Enter the repository and token.",true);return}
+  localStorage.setItem(LS,JSON.stringify(cfg));$("token").value="";
+  load().catch(e=>{say("Could not connect:\n"+e.message,true)});
+};
+$("logout").onclick=()=>{if(dirty&&!confirm("You have unpublished changes. Disconnect anyway?"))return;localStorage.removeItem(LS);location.reload()};
+if(cfg.token)load().catch(e=>{say("Could not connect:\n"+e.message,true)});
+</script>
+</body>
+</html>
