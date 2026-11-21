@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smitha G S – Painter, Kozhikode</title>
+<meta name="description" content="Smitha G S is a self-taught painter from Kozhikode, Kerala. Dense acrylic forests of memory, shown at the Kochi-Muziris Biennale and the Forest Festival of the Arts, Okayama.">
+<meta property="og:title" content="Smitha G S – Painter">
+<meta property="og:description" content="Forests of memory in acrylic. Kozhikode, Kerala.">
+<meta property="og:image" content="images/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f2ea;   /* gallery wall */
+  --card:#ece6da;
+  --ink:#17140f;
+  --muted:#6d655a;
+  --line:#d8d0c1;
+  --accent:#8e2f1d;  /* oxblood, from her red trees */
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Jost',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:300;font-size:1.05rem;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:min(1180px,100% - 2.5rem);margin-inline:auto}
+.label{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:400}
+
+header{position:fixed;inset:0 0 auto 0;z-index:20;background:rgba(246,242,234,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;padding:1rem 0}
+.logo{font-family:var(--serif);font-size:1.5rem;font-weight:500;text-decoration:none;letter-spacing:.01em;white-space:nowrap}
+nav{display:flex;gap:2rem}
+nav a{text-decoration:none;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+nav a:hover{color:var(--accent)}
+@media(max-width:700px){
+  header .wrap{flex-direction:column;align-items:flex-start;gap:.2rem;padding:.7rem 0}
+  nav{gap:1.2rem;overflow-x:auto;max-width:100%}
+  nav a{white-space:nowrap;font-size:.74rem}
+  html{scroll-padding-top:6.5rem}
+}
+
+.hero{padding-top:8.5rem}
+@media(max-width:700px){.hero{padding-top:7.5rem}}
+.hero .label{display:block;margin-bottom:1rem}
+h1{font-family:var(--serif);font-weight:300;font-size:clamp(3.4rem,12vw,9.5rem);line-height:.95;letter-spacing:-.02em}
+h1 em{font-style:italic;color:var(--accent)}
+.hero p.lede{max-width:36rem;margin-top:1.6rem;font-size:1.15rem;color:var(--muted)}
+.frame{margin-top:3rem;width:100%;aspect-ratio:16/8;background:#1d1812;overflow:hidden}
+.frame canvas,.frame img{display:block;width:100%;height:100%;object-fit:cover}
+@media(max-width:700px){.frame{aspect-ratio:4/3}}
+
+section{padding:clamp(4.5rem,10vw,8rem) 0}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.1;letter-spacing:-.01em;margin-bottom:.6rem}
+.rule{width:56px;height:1px;background:var(--accent);margin:1.2rem 0 2.8rem;border:0}
+
+/* about */
+.two{display:grid;gap:3rem;grid-template-columns:1fr}
+@media(min-width:880px){.two{grid-template-columns:5fr 7fr;gap:6rem;align-items:start}}
+.portrait{aspect-ratio:4/5;background:var(--card) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);text-align:center;padding:1rem;font-size:.9rem}
+.lead{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.35;font-weight:400;margin-bottom:1.8rem}
+#about p{margin-bottom:1.2rem;max-width:38rem}
+dl{display:grid;grid-template-columns:auto 1fr;gap:.7rem 2rem;margin-top:2.2rem;padding-top:1.6rem;border-top:1px solid var(--line);max-width:38rem}
+dt{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:.25rem}
+dd{margin:0}
+
+/* works */
+#works{background:var(--card)}
+.show{position:relative}
+.view{position:relative;height:clamp(300px,58vh,740px);display:grid;place-items:center;overflow:hidden;touch-action:pan-y;cursor:zoom-in;outline-offset:4px}
+.view img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 18px 44px rgba(23,20,15,.22);transition:opacity .35s ease}
+.view img.out{opacity:0}
+.prog{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--accent)}
+.prog.run{animation:grow var(--dur,5s) linear forwards}
+@keyframes grow{to{width:100%}}
+.arr{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:1px solid var(--ink);background:rgba(246,242,234,.88);color:var(--ink);font-size:1.3rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.arr:hover{background:var(--ink);color:var(--paper)}
+.arr.l{left:.4rem}.arr.r{right:.4rem}
+.bar{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem 2rem;flex-wrap:wrap;margin-top:1.8rem}
+.info b{display:block;font-family:var(--serif);font-weight:500;font-size:1.5rem;line-height:1.2}
+.info .m{display:block;color:var(--muted);font-size:.95rem}
+.info .pr{display:block;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-top:.2rem}
+.info .btn{margin-top:1rem;padding:.7rem 1.6rem}
+.ctl{display:flex;align-items:center;gap:.8rem}
+.ctl button{background:none;border:1px solid var(--ink);color:var(--ink);padding:.5rem 1.1rem;font:inherit;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;min-height:40px}
+.ctl button:hover{background:var(--ink);color:var(--paper)}
+.ctl .cnt{font-size:.9rem;color:var(--muted);min-width:4.5rem;text-align:right}
+.thumbs{display:flex;gap:.6rem;overflow-x:auto;margin-top:1.8rem;padding-bottom:.6rem;scroll-snap-type:x proximity}
+.thumbs button{flex:0 0 auto;height:68px;padding:0;border:2px solid transparent;background:none;cursor:pointer;opacity:.6;scroll-snap-align:center;transition:opacity .2s}
+.thumbs button img{display:block;height:100%;width:auto}
+.thumbs button:hover{opacity:1}
+.thumbs button[aria-current="true"]{border-color:var(--accent);opacity:1}
+.msg{color:var(--muted);padding:3rem 0}
+dialog{border:0;background:var(--paper);color:var(--ink);width:100%;max-width:none;height:100%;max-height:none;padding:0}
+.lb{height:100%;display:grid;grid-template-rows:1fr auto;gap:1rem;padding:4rem 1.5rem 1.5rem}
+.lb .stage{min-height:0;display:grid;place-items:center}
+.lb img,.lb .ph{max-width:100%;max-height:100%;object-fit:contain}
+.lb .cap{text-align:center}
+.lb .cap b{font-family:var(--serif);font-size:1.5rem;font-weight:500;display:block}
+.lb .cap span{display:block;color:var(--muted);font-size:.95rem}
+.lb .x{position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--ink);color:var(--ink);padding:.5rem 1.2rem;font:inherit;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.lb .x:hover{background:var(--ink);color:var(--paper)}
+.btn{display:inline-block;padding:.9rem 2rem;background:var(--accent);color:#fff;text-decoration:none;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;font-weight:400;border:1px solid var(--accent);transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--accent)}
+.lb .btn{margin-top:.9rem}
+
+/* journey */
+.cv{max-width:50rem}
+.cv div{display:grid;grid-template-columns:7.5rem 1fr;gap:.5rem 2rem;padding:1.5rem 0;border-top:1px solid var(--line)}
+.cv div:last-child{border-bottom:1px solid var(--line)}
+.cv time{font-family:var(--serif);font-size:1.5rem;line-height:1.3;color:var(--accent)}
+.cv b{font-weight:500}
+@media(max-width:600px){.cv div{grid-template-columns:1fr}}
+
+/* press */
+#press{background:var(--card)}
+.press{max-width:50rem}
+.press a{display:flex;justify-content:space-between;gap:1.5rem;padding:1.3rem 0;border-top:1px solid var(--line);text-decoration:none}
+.press a:last-child{border-bottom:1px solid var(--line)}
+.press b{font-family:var(--serif);font-weight:500;font-size:1.3rem;line-height:1.3;transition:color .2s}
+.press a:hover b{color:var(--accent)}
+.press span{color:var(--muted);white-space:nowrap;font-size:.92rem;padding-top:.3rem}
+@media(max-width:560px){.press a{flex-direction:column;gap:.2rem}}
+
+/* enquire */
+#contact{background:var(--ink);color:var(--paper);text-align:center}
+#contact .rule{margin-inline:auto}
+#contact p{max-width:32rem;margin:0 auto 2rem;color:#c9c0b2}
+.mail{display:inline-block;margin-top:2rem;font-family:var(--serif);font-size:clamp(1.4rem,4.5vw,2.2rem);text-decoration:none;border-bottom:1px solid var(--accent);word-break:break-word}
+.links{display:flex;gap:2rem;justify-content:center;margin-top:2.4rem;flex-wrap:wrap}
+.links a{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c9c0b2}
+.links a:hover{color:#fff}
+#contact .btn:hover{background:transparent;color:#fff;border-color:#fff}
+footer{background:#0f0d0a;color:#8b8376;padding:1.6rem 0;font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:.4rem 2rem;flex-wrap:wrap}
+footer b{color:#d8d0c1;font-weight:400}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top">Smitha G S</a>
+    <nav aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#works">Works</a>
+      <a href="#journey">Journey</a>
+      <a href="#press">Press</a>
+      <a href="#contact">Enquire</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <span class="label">Painter &middot; Kozhikode, Kerala</span>
+    <h1>Smitha <em>G S</em></h1>
+    <p class="lede">Dense acrylic forests, built from childhood memory and crowded with the small creatures most people step past.</p>
+    <div class="frame" id="frame"><canvas id="canopy" aria-hidden="true"></canvas></div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap two">
+    <div class="portrait" id="portrait">Add portrait: images/portrait.jpg</div>
+    <div>
+      <span class="label">About the artist</span>
+      <hr class="rule" style="margin-bottom:1.6rem">
+      <p class="lead">A self-taught painter whose work grows out of memory, and whose forests are never empty.</p>
+      <p>Smitha G S is a self-taught artist from the Malabar region of Kozhikode, Kerala. Her canvases are dense, saturated forests with chameleons, grasshoppers, micro-organisms and aquatic creatures moving through them.</p>
+      <p>She paints in green as a memorial to her father, who made toys from coconut leaves for her when she was a child.</p>
+      <p>Her paintings were first shown in &ldquo;Lokame Tharavadu&rdquo;, curated by Bose Krishnamachari, and later at the Kochi-Muziris Biennale 2022&ndash;23, where one of them travelled further than most: onto the tail of an aircraft.</p>
+      <dl>
+        <dt>Based</dt><dd>Kozhikode, Kerala</dd>
+        <dt>Medium</dt><dd>Acrylic on canvas</dd>
+        <dt>Shown</dt><dd>Kochi-Muziris Biennale, 2022&ndash;23<br>Forest Festival of the Arts, Okayama, 2024</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <div class="wrap">
+    <span class="label">Selected</span>
+    <h2>Works</h2>
+    <hr class="rule">
+    <div class="show" id="show" aria-roledescription="carousel" aria-label="Paintings by Smitha G S">
+      <div class="view" id="view" tabindex="0" title="Click to enlarge">
+        <img id="main" alt="">
+        <button type="button" class="arr l" id="prev" aria-label="Previous painting">&#8249;</button>
+        <button type="button" class="arr r" id="next" aria-label="Next painting">&#8250;</button>
+        <i class="prog" id="prog"></i>
+      </div>
+      <div class="bar">
+        <div class="info" id="info" aria-live="polite"></div>
+        <div class="ctl"><button type="button" id="play" aria-label="Pause slideshow">Pause</button><span class="cnt" id="cnt"></span></div>
+      </div>
+      <div class="thumbs" id="thumbs" aria-label="All paintings"></div>
+    </div>
+    <p class="msg" id="msg" hidden>The paintings are being updated. Please check back soon.</p>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="wrap">
+    <span class="label">Curriculum vitae</span>
+    <h2>Journey</h2>
+    <hr class="rule">
+    <div class="cv">
+      <div><time>2017</time><p><b>Lalitha Kala Akademi Award</b> for one of her paintings.</p></div>
+      <div><time>2022&ndash;23</time><p><b>Kochi-Muziris Biennale</b>, fifth edition. Her acrylic painting was shown at Aspinwall House, Fort Kochi.</p></div>
+      <div><time>26 Jan 2023</time><p><b>Tail art, Air India Express.</b> A 25-foot adaptation of her painting was unveiled on Boeing 737-800 VT-AXN.</p></div>
+      <div><time>Mar 2023</time><p><b>Felicitated by Air India Express</b> on Women&rsquo;s Day, with CIAL and Kochi Biennale Foundation.</p></div>
+      <div><time>2024</time><p><b>Forest Festival of the Arts, Okayama, Japan.</b> She showed <i>Eudaimonia</i>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="press">
+  <div class="wrap">
+    <span class="label">Writing</span>
+    <h2>In the press</h2>
+    <hr class="rule">
+    <div class="press">
+      <a href="https://www.theweek.in/leisure/society/2023/01/30/kochi-muziris-biennale-meet-the-artist-behind-the-painting-took-to-the-skies.amp.html" target="_blank" rel="noopener"><b>Meet the artist behind the painting that took to the skies</b><span>The Week, 2023</span></a>
+      <a href="https://www.thenewsminute.com/kerala/air-india-express-gets-new-tail-art-thanks-kochi-biennale-172587" target="_blank" rel="noopener"><b>Air India Express gets new tail art</b><span>The News Minute, 2023</span></a>
+      <a href="https://www.onmanorama.com/lifestyle/women/2017/10/31/woman-who-takes-creepy-crawlies-from-bait-box-to-gallery.amp.html" target="_blank" rel="noopener"><b>The woman who takes creepy-crawlies from bait box to gallery</b><span>Onmanorama, 2017</span></a>
+      <a href="https://artsandculture.google.com/story/uAUxfmaJ-uHzkg" target="_blank" rel="noopener"><b>Soils and Indigeneity: Artworks of Kochi-Muziris Biennale 2022&ndash;23</b><span>Google Arts &amp; Culture</span></a>
+      <a href="https://forestartfest-okayama.jp/en/exhibitions/artists/smitha" target="_blank" rel="noopener"><b>Artist page, Forest Festival of the Arts Okayama</b><span>2024</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <span class="label" style="color:#a79e90">Enquire</span>
+    <h2>Interested in a work?</h2>
+    <hr class="rule">
+    <p>Send an enquiry with the title of the painting and your city.</p>
+    <a class="btn" href="mailto:mail@studioexuberance.com?subject=Enquiry%20for%20Smitha%20G%20S">Send an enquiry</a><br>
+    <a class="mail" href="mailto:mail@studioexuberance.com?subject=Enquiry%20for%20Smitha%20G%20S">mail@studioexuberance.com</a>
+    <div class="links">
+      <a href="https://www.instagram.com/artist_gs_smitha?psln=MTdobXB0cXEyOTRkeA==" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/share/19xH3ZgiAs/" target="_blank" rel="noopener">Facebook</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>&copy; <span id="yr"></span> Smitha G S. All artworks are the artist&rsquo;s copyright.</span><span>Powered by <b>AI Seva AI Consultancy</b></span></div></footer>
+
+<dialog id="lb" aria-label="Artwork viewer"><div class="lb">
+  <button type="button" class="x" id="close">Close</button>
+  <div class="stage" id="stage"></div>
+  <div class="cap" id="cap"></div>
+</div></dialog>
+
+<script>
+
+function rng(s){return()=>(s=(s*16807)%2147483647)/2147483647}
+const palette=["#c8402c","#e07a2d","#e9b44c","#6fa86a","#2f8f83","#3b62a8","#6b4aa0","#b3377f"];
+function paintForest(cv,w,h,seed){
+  cv.width=w;cv.height=h;const g=cv.getContext("2d"),r=rng(seed);
+  g.fillStyle="#1d1812";g.fillRect(0,0,w,h);
+  const base=Math.max(8,Math.min(w,h)/38);
+  for(let y=-base;y<h+base*3;y+=base*.55){
+    const t=Math.min(1,Math.max(0,y/h)),s=base*(.5+t*1.6),c=[palette[Math.floor(r()*8)],palette[Math.floor(r()*8)]];
+    for(let x=-s;x<w+s;x+=s*1.5){
+      const cx=x+r()*s,cy=y+r()*s*.5,col=c[r()>.55?0:1];
+      g.fillStyle="rgba(10,8,5,.55)";g.beginPath();g.ellipse(cx,cy+s*.35,s*.62,s*.3,0,0,7);g.fill();
+      for(let k=0;k<5;k++){g.fillStyle=col;g.globalAlpha=.55+r()*.45;g.beginPath();g.arc(cx+(r()-.5)*s*.8,cy+(r()-.5)*s*.5,s*(.22+r()*.22),0,7);g.fill()}
+      g.globalAlpha=1;
+    }
+  }
+}
+paintForest(document.getElementById("canopy"),1400,700,11);
+
+const EXT=["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"];
+function probe(src){return new Promise(res=>{const t=new Image();t.onload=()=>res(true);t.onerror=()=>res(false);t.src=src})}
+async function find(name){for(const e of EXT){const f=`images/${name}.${e}`;if(await probe(f))return f}return ""}
+
+/* ---------- SLIDESHOW: reads works.json (add paintings there) ---------- */
+const BASE="images/works/",DUR=5000;
+const $=id=>document.getElementById(id);
+const dlg=$("lb"),stage=$("stage"),cap=$("cap"),main=$("main"),prog=$("prog"),playBtn=$("play");
+let list=[],idx=0,playing=!matchMedia("(prefers-reduced-motion: reduce)").matches,timer=0,hover=false;
+const meta=w=>[w.year,w.medium,(w.size||"").replace(/\s*x\s*/i," \u00d7 ")].filter(Boolean).join(", ");
+const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const mail=w=>`mailto:mail@studioexuberance.com?subject=${encodeURIComponent("Enquiry: "+(w.title||"Untitled"))}&body=${encodeURIComponent(`Hello,\n\nI would like to enquire about "${w.title||"Untitled"}" (${[w.year,w.size].filter(Boolean).join(", ")}). My name and city:\n\n`)}`;
+function capHTML(w){return `<b>${esc(w.title||"Untitled")}</b><span class="m">${esc(meta(w))}</span>`+(w.sold?'<span class="pr">Sold</span>':(w.price?`<span class="pr">${esc(w.price)}</span>`:"")+`<a class="btn" href="${mail(w)}">Enquire about this work</a>`)}
+function show(i){
+  idx=(i+list.length)%list.length;const w=list[idx];
+  main.classList.add("out");
+  const n=new Image();n.onload=n.onerror=()=>{main.src=BASE+w.file;main.alt=`${w.title||"Untitled"}${w.year?", "+w.year:""}, ${w.medium||""}`;main.classList.remove("out")};n.src=BASE+w.file;
+  $("info").innerHTML=capHTML(w);$("cnt").textContent=`${idx+1} / ${list.length}`;
+  [...$("thumbs").children].forEach((b,k)=>{const on=k===idx;b.setAttribute("aria-current",on);if(on){const t=$("thumbs");t.scrollTo({left:b.offsetLeft-t.clientWidth/2+b.clientWidth/2,behavior:"smooth"})}});
+  const nx=new Image();nx.src=BASE+list[(idx+1)%list.length].file;
+  tick();
+}
+function tick(){
+  clearTimeout(timer);prog.classList.remove("run");void prog.offsetWidth;
+  if(playing&&!hover&&!document.hidden&&!dlg.open&&list.length>1){prog.style.setProperty("--dur",DUR+"ms");prog.classList.add("run");timer=setTimeout(()=>show(idx+1),DUR)}
+}
+function setPlay(p){playing=p;playBtn.textContent=p?"Pause":"Play";playBtn.setAttribute("aria-label",p?"Pause slideshow":"Play slideshow");tick()}
+function open(){const w=list[idx];stage.replaceChildren(Object.assign(new Image(),{src:BASE+w.file,alt:main.alt}));cap.innerHTML=capHTML(w);if(!dlg.open)dlg.showModal();tick()}
+fetch("works.json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{
+  list=(d.works||[]).filter(w=>w&&w.file);if(!list.length)throw 0;
+  const th=$("thumbs");
+  list.forEach((w,k)=>{const b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Show painting "+(k+1));const im=new Image();im.loading="lazy";im.alt="";im.src=BASE+(w.thumb||w.file);b.append(im);b.onclick=()=>show(k);th.append(b)});
+  $("prev").onclick=e=>{e.stopPropagation();show(idx-1)};$("next").onclick=e=>{e.stopPropagation();show(idx+1)};
+  playBtn.onclick=()=>setPlay(!playing);
+  const v=$("view");let x0=null;
+  v.addEventListener("pointerdown",e=>{x0=e.clientX});
+  v.addEventListener("pointerup",e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>45)show(dx<0?idx+1:idx-1);else if(!e.target.closest(".arr"))open()});
+  v.addEventListener("pointercancel",()=>{x0=null});
+  v.addEventListener("mouseenter",()=>{if(matchMedia("(hover:hover)").matches){hover=true;tick()}});
+  v.addEventListener("mouseleave",()=>{hover=false;tick()});
+  v.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}});
+  document.addEventListener("keydown",e=>{
+    const inView=dlg.open||$("show").contains(document.activeElement);if(!inView)return;
+    if(e.key==="ArrowRight"){show(idx+1);if(dlg.open)open()}if(e.key==="ArrowLeft"){show(idx-1);if(dlg.open)open()}
+  });
+  document.addEventListener("visibilitychange",tick);
+  show(0);setPlay(playing);
+}).catch(()=>{$("show").hidden=true;$("msg").hidden=false});
+$("close").onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener("close",tick);
+
+find("portrait").then(f=>{if(f){const p=document.getElementById("portrait");p.style.backgroundImage=`url(${f})`;p.textContent=""}});
+find("hero").then(f=>{if(f){const fr=document.getElementById("frame"),im=new Image();im.src=f;im.alt="Painting by Smitha G S";fr.replaceChildren(im)}});
+document.getElementById("yr").textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
